@@ -83,6 +83,94 @@ Specialized agent for analyzing TOP 50 BSE stocks using quantitative financial m
 
 ---
 
+### 🎯 Enhanced Technical Analysis Agent
+**File**: `.github/agents/bse-technical-analysis.agent.md` (coming soon)
+
+Advanced technical indicator analysis with multiple chart types.
+
+**Indicators Included**:
+- **RSI (Relative Strength Index)**: Momentum (0-100)
+- **MACD**: Trend and momentum (line, signal, histogram)
+- **Bollinger Bands**: Volatility and support/resistance
+- **Stochastic Oscillator**: Overbought/oversold detection
+- **ADX (Average Directional Index)**: Trend strength measurement
+- **ATR (Average True Range)**: Volatility analysis
+- **Moving Averages**: SMA(20), SMA(50), SMA(200), EMA(12), EMA(26)
+- **OBV (On Balance Volume)**: Volume trend indicator
+- **+DI/-DI**: Directional indicators
+
+**Trading Signals Generated**:
+- 🟢 STRONG BUY: Multiple bullish signals
+- 🟢 BUY: 1-2 bullish signals
+- 🟡 NEUTRAL: Mixed signals
+- 🔴 SELL: 1-2 bearish signals
+- 🔴 STRONG SELL: Multiple bearish signals
+
+**Usage**:
+```bash
+python scripts/bse_technical_indicators.py
+```
+
+**Output**: `bse_technical_analysis.html` with detailed indicator analysis
+
+---
+
+### 📡 Real-Time BSE Stock Tracker Agent
+**File**: `.github/agents/bse-realtime-tracker.agent.md`
+
+Stream live BSE prices, set dynamic alerts, and monitor positions in real-time.
+
+**Features**:
+- ✓ Real-time price streaming (1-5 sec updates)
+- ✓ Dynamic price alerts (above/below target)
+- ✓ Volume spike detection
+- ✓ Percentage change monitoring
+- ✓ Portfolio P&L tracking
+- ✓ Live market ticker
+- ✓ Alert notifications (Telegram, Email, Slack)
+- ✓ Technical signal alerts (RSI, MACD, Bollinger Bands)
+- ✓ Market circuit breaker detection
+
+**Alert Types**:
+- Price reaches target level
+- Percentage change threshold (±2%, ±5%, ±10%)
+- Volume spike (>2x, >5x average)
+- RSI oversold (<30) or overbought (>70)
+- MACD bullish/bearish crossover
+- Bollinger Band breakout
+- Support/resistance breaks
+
+**Usage**:
+```python
+from scripts.bse_realtime_tracker import RealtimeBSETracker
+
+tracker = RealtimeBSETracker()
+tracker.add_stock("TCS", 100.0)
+tracker.set_alert("TCS", "price_above", 110)
+
+# Simulate price updates
+tracker.update_price("TCS", 105.50)
+
+# Check portfolio
+holdings = {"TCS": 10, "INFY": 20}
+pnl = tracker.get_portfolio_pnl(holdings)
+```
+
+**Example Prompts**:
+```
+@bse-realtime-tracker Set up real-time alerts for TCS when price moves 5% from current level
+
+@bse-realtime-tracker Monitor TOP 10 BSE stocks and alert me on volume spikes (> 3x average)
+
+@bse-realtime-tracker Stream live prices for my portfolio and calculate real-time P&L
+
+@bse-realtime-tracker Alert me when INFY RSI goes below 30 (oversold signal)
+
+@bse-realtime-tracker Detect price gaps and circuit breaker events in real-time
+```
+
+---
+
 ## How to Use These Agents
 
 ### In VS Code Settings
