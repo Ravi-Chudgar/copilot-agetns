@@ -27,6 +27,62 @@ Specialized agent for building, signing, and releasing Flutter Android APK files
 
 ---
 
+### 📊 BSE Stock Analysis Agent
+**File**: `.github/agents/bse-stock-analysis.agent.md`
+
+Specialized agent for analyzing TOP 50 BSE stocks using quantitative financial metrics and AI predictions.
+
+**Capabilities**:
+- Analyzes 40+ years of historical stock data
+- Calculates Sharpe Ratio (risk-adjusted returns)
+- Calculates Sortino Ratio (downside risk measurement)
+- Generates interactive HTML dashboards
+- Creates candlestick charts with Plotly.js
+- Provides real-time price updates
+- Exportable to PDF and CSV formats
+- Dark mode toggle for comfortable viewing
+
+**Use when**:
+- Analyzing TOP 50 BSE stocks systematically
+- Calculating risk-adjusted return metrics
+- Building quantitative analysis reports
+- Comparing multiple stocks side-by-side
+- Understanding volatility and downside risk
+- Generating investment analysis dashboards
+
+**Example prompts**:
+```
+@bse-stock-analysis Analyze TOP 50 BSE stocks and show which ones have the best Sharpe and Sortino ratios
+
+@bse-stock-analysis Generate an interactive HTML report with candlestick charts for top 10 BSE performers
+
+@bse-stock-analysis Calculate Sortino ratio vs Sharpe ratio for NIFTY50 stocks and identify low-volatility winners
+
+@bse-stock-analysis Show me the risk-adjusted returns of BSE banks sector using 10-year historical data
+```
+
+**Key Metrics**:
+- **Sharpe Ratio**: Risk-adjusted return (benchmark: > 1.0)
+- **Sortino Ratio**: Downside risk measurement (benchmark: > 1.0)
+- **Annual Return**: Percentage gain/loss per year
+- **Volatility**: Standard deviation of returns
+- **Max Drawdown**: Largest peak-to-trough decline
+- **Win Rate**: Percentage of profitable days
+
+**Output Files Generated**:
+- `bse_analysis_report.html` — Interactive dashboard
+- `bse_stocks_data.csv` — Detailed metrics
+- `bse_analysis.pdf` — Printable report
+- Candlestick charts for individual stocks
+
+**Setup**:
+1. Get dhanHQ API key from https://www.dhan.co
+2. Update `DHAN_API_KEY` in configuration
+3. Run analysis: `python scripts/bse_stock_analyzer.py`
+4. Open HTML report in browser for interactive charts
+
+---
+
 ## How to Use These Agents
 
 ### In VS Code Settings
