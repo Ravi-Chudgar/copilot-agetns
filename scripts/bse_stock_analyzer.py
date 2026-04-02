@@ -227,14 +227,18 @@ class BSEStockAnalyzer:
         )
         
         # Scatter plot: Risk vs Return
+        # Ensure size values are positive
+        analysis_df_copy = analysis_df.copy()
+        analysis_df_copy["Size"] = abs(analysis_df_copy["Total_Return"]) * 100 + 5  # Make positive and scale
+        
         fig_scatter = px.scatter(
-            analysis_df,
+            analysis_df_copy,
             x="Volatility",
             y="Annual_Return",
             hover_name="Symbol",
             hover_data=["Sharpe_Ratio", "Sortino_Ratio"],
             color="Sharpe_Ratio",
-            size="Total_Return",
+            size="Size",
             title="Risk vs Return Profile (TOP 50 BSE Stocks)"
         )
         
