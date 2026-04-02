@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-04-02T13:53:58.264381",
+  "portfolio": {
+    "total_value": 3617.05,
+    "total_cost": 3570.0,
+    "total_gain": 47.05,
+    "total_gain_percent": 1.32
+  },
+  "holdings": [
+    {
+      "symbol": "INFY",
+      "quantity": 20,
+      "entry_price": 104.0,
+      "current_price": 105.72,
+      "value": 2114.4,
+      "gain_loss": 34.4,
+      "gain_loss_percent": 1.65
+    },
+    {
+      "symbol": "TCS",
+      "quantity": 10,
+      "entry_price": 100.0,
+      "current_price": 102.31,
+      "value": 1023.1,
+      "gain_loss": 23.1,
+      "gain_loss_percent": 2.31
+    },
+    {
+      "symbol": "RELIANCE",
+      "quantity": 5,
+      "entry_price": 98.0,
+      "current_price": 95.91,
+      "value": 479.55,
+      "gain_loss": -10.45,
+      "gain_loss_percent": -2.13
+    }
+  ]
+}
