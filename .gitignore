@@ -1,0 +1,43 @@
+# Gitignore for Copilot Agents Repository
+
+# VS Code specific
+.vscode/
+*.code-workspace
+.DS_Store
+
+# Node modules (if using any build tools)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+venv/
+.env
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+
+# OS specific
+Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+
+# Logs
+logs/
+*.log
