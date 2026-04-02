@@ -107,6 +107,138 @@ class BSEStockAnalyzer:
             return 0
         return excess_returns / downside_volatility
     
+    def calculate_rsi(self, prices: pd.Series, period: int = 14) -> pd.Series:
+        """Calculate Relative Strength Index (RSI)"""
+        delta = prices.diff()
+        gain = (delta.where(delta > 0, 0)).rolling(window=period).mean()
+        loss = (-delta.where(delta < 0, 0)).rolling(window=period).mean()
+        rs = gain / loss
+        rsi = 100 - (100 / (1 + rs))
+        return rsi
+    
+    def calculate_macd(self, prices: pd.Series) -> Tuple[pd.Series, pd.Series]:
+        """Calculate MACD (Moving Average Convergence Divergence)"""
+        ema12 = prices.ewm(span=12, adjust=False).mean()
+        ema26 = prices.ewm(span=26, adjust=False).mean()
+        macd = ema12 - ema26
+        signal = macd.ewm(span=9, adjust=False).mean()
+        return macd, signal
+    
+    def calculate_moving_averages(self, prices: pd.Series) -> Dict[str, pd.Series]:
+        """Calculate simple and exponential moving averages"""
+        return {
+            "sma50": prices.rolling(window=50).mean(),
+            "sma200": prices.rolling(window=200).mean(),
+            "ema20": prices.ewm(span=20, adjust=False).mean(),
+            "ema50": prices.ewm(span=50, adjust=False).mean()
+        }
+    
+    def generate_signals(self, df: pd.DataFrame, symbol: str) -> Dict:
+        """Generate entry and exit trading signals"""
+        close = df['Close']
+        
+        # Calculate indicators
+        rsi = self.calculate_rsi(close, period=14)
+        macd, macd_signal = self.calculate_macd(close)
+        mas = self.calculate_moving_averages(close)
+        
+        # Get latest values
+        latest_close = close.iloc[-1]
+        latest_rsi = rsi.iloc[-1]
+        latest_macd = macd.iloc[-1]
+        latest_signal = macd_signal.iloc[-1]
+        latest_sma50 = mas['sma50'].iloc[-1]
+        latest_sma200 = mas['sma200'].iloc[-1]
+        latest_ema20 = mas['ema20'].iloc[-1]
+        
+        # Entry Signal Logic
+        entry_signals = []
+        entry_score = 0
+        
+        # RSI entry (oversold < 30 = buy signal)
+        if latest_rsi < 30:
+            entry_signals.append("RSI Oversold (<30)")
+            entry_score += 2
+        elif latest_rsi < 40:
+            entry_signals.append("RSI Below 40")
+            entry_score += 1
+            
+        # MACD entry (bullish crossover)
+        if latest_macd > latest_signal and macd.iloc[-2] <= macd_signal.iloc[-2]:
+            entry_signals.append("MACD Bullish Crossover")
+            entry_score += 2
+        
+        # Moving Average entry (price above 50-day MA)
+        if latest_close > latest_sma50 > latest_sma200:
+            entry_signals.append("Golden Cross (SMA50 > SMA200)")
+            entry_score += 2
+        elif latest_close > latest_sma50:
+            entry_signals.append("Price Above SMA50")
+            entry_score += 1
+            
+        # EMA entry (price above EMA20)
+        if latest_close > latest_ema20:
+            entry_signals.append("Price Above EMA20")
+            entry_score += 1
+        
+        # Exit Signal Logic
+        exit_signals = []
+        exit_score = 0
+        
+        # RSI exit (overbought > 70 = sell signal)
+        if latest_rsi > 70:
+            exit_signals.append("RSI Overbought (>70)")
+            exit_score += 2
+        elif latest_rsi > 60:
+            exit_signals.append("RSI Above 60")
+            exit_score += 1
+            
+        # MACD exit (bearish crossover)
+        if latest_macd < latest_signal and macd.iloc[-2] >= macd_signal.iloc[-2]:
+            exit_signals.append("MACD Bearish Crossover")
+            exit_score += 2
+        
+        # Moving Average exit (death cross)
+        if latest_sma50 < latest_sma200:
+            exit_signals.append("Death Cross (SMA50 < SMA200)")
+            exit_score += 2
+        elif latest_close < latest_sma50:
+            exit_signals.append("Price Below SMA50")
+            exit_score += 1
+            
+        # EMA exit
+        if latest_close < latest_ema20:
+            exit_signals.append("Price Below EMA20")
+            exit_score += 1
+        
+        # Determine overall signal
+        if entry_score >= 4:
+            overall_signal = "🟢 STRONG BUY"
+        elif entry_score >= 2:
+            overall_signal = "🟢 BUY"
+        elif exit_score >= 4:
+            overall_signal = "🔴 STRONG SELL"
+        elif exit_score >= 2:
+            overall_signal = "🔴 SELL"
+        else:
+            overall_signal = "🟡 NEUTRAL"
+        
+        return {
+            "symbol": symbol,
+            "current_price": float(latest_close),
+            "signal": overall_signal,
+            "entry_signals": entry_signals,
+            "entry_score": entry_score,
+            "exit_signals": exit_signals,
+            "exit_score": exit_score,
+            "rsi": float(latest_rsi),
+            "macd": float(latest_macd),
+            "macd_signal": float(latest_signal),
+            "sma50": float(latest_sma50),
+            "sma200": float(latest_sma200),
+            "ema20": float(latest_ema20)
+        }
+    
     def analyze_stock(self, symbol: str) -> Dict:
         """Comprehensive analysis of a single stock"""
         df = self.fetch_stock_data(symbol)
@@ -141,6 +273,9 @@ class BSEStockAnalyzer:
         # Win rate
         win_rate = (returns > 0).sum() / len(returns) * 100
         
+        # Generate trading signals
+        trading_signals = self.generate_signals(df, symbol)
+        
         return {
             "symbol": symbol,
             "current_price": float(current_price),
@@ -152,12 +287,14 @@ class BSEStockAnalyzer:
             "total_return": float(total_return),
             "win_rate": float(win_rate),
             "data": df,
-            "returns": returns
+            "returns": returns,
+            "trading_signals": trading_signals
         }
     
     def analyze_all_stocks(self) -> pd.DataFrame:
         """Analyze all top 50 BSE stocks"""
         results = []
+        signals_results = []
         
         for symbol in self.bse_stocks:
             print(f"Analyzing {symbol}...", end=" ")
@@ -176,11 +313,34 @@ class BSEStockAnalyzer:
                     "Total_Return": analysis["total_return"],
                     "Win_Rate": analysis["win_rate"]
                 })
+                
+                # Store trading signals
+                signals_results.append({
+                    "Symbol": symbol,
+                    "Signal": analysis["trading_signals"]["signal"],
+                    "RSI": f"{analysis['trading_signals']['rsi']:.1f}",
+                    "MACD": f"{analysis['trading_signals']['macd']:.2f}",
+                    "SMA50": f"₹{analysis['trading_signals']['sma50']:.0f}",
+                    "SMA200": f"₹{analysis['trading_signals']['sma200']:.0f}",
+                    "EMA20": f"₹{analysis['trading_signals']['ema20']:.0f}",
+                    "Entry_Signals": ", ".join(analysis['trading_signals']['entry_signals']) if analysis['trading_signals']['entry_signals'] else "None",
+                    "Exit_Signals": ", ".join(analysis['trading_signals']['exit_signals']) if analysis['trading_signals']['exit_signals'] else "None"
+                })
+                
                 print("✓")
             else:
                 print("✗")
         
         df = pd.DataFrame(results)
+        
+        # Save trading signals to CSV
+        signals_df = pd.DataFrame(signals_results)
+        signals_df.to_csv("bse_trading_signals.csv", index=False)
+        print(f"✅ Trading signals exported: bse_trading_signals.csv")
+        
+        # Store signals for HTML generation
+        self.trading_signals_df = signals_df
+        
         return df.sort_values("Sharpe_Ratio", ascending=False)
     
     def generate_html_report(self, analysis_df: pd.DataFrame, output_file: str = "bse_analysis_report.html"):
@@ -216,6 +376,7 @@ class BSEStockAnalyzer:
                 )
         
         fig_charts.update_layout(height=2000, title_text="TOP 10 BSE Stocks (by Sharpe Ratio) - 1 Year Charts")
+        candlestick_html = fig_charts.to_html(include_plotlyjs=False, div_id="candlestick-chart")
         
         # Performance heatmap
         heatmap_data = analysis_df.set_index("Symbol")[["Sharpe_Ratio", "Sortino_Ratio", "Annual_Return", "Volatility"]]
@@ -225,6 +386,7 @@ class BSEStockAnalyzer:
             color_continuous_scale="RdYlGn",
             title="Performance Heatmap - Top 20 BSE Stocks"
         )
+        heatmap_html = fig_heatmap.to_html(include_plotlyjs=False, div_id="heatmap-chart")
         
         # Scatter plot: Risk vs Return
         # Ensure size values are positive
@@ -241,6 +403,7 @@ class BSEStockAnalyzer:
             size="Size",
             title="Risk vs Return Profile (TOP 50 BSE Stocks)"
         )
+        scatter_html = fig_scatter.to_html(include_plotlyjs=False, div_id="scatter-chart")
         
         # HTML Template
         html_content = f"""
@@ -480,7 +643,45 @@ class BSEStockAnalyzer:
                     </div>
                 </div>
                 
-                <h2 style="margin: 30px 0 20px 0;">🏆 TOP 20 BSE Stocks (by Sharpe Ratio)</h2>
+                <h2 style="margin: 30px 0 20px 0;">� Trading Signals - Entry & Exit Points (All 50 Stocks)</h2>
+                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">
+                    <strong>Signal Legend:</strong>
+                    🟢 STRONG BUY (4+ entry signals) | 🟢 BUY (2+ entry signals) | 
+                    🟡 NEUTRAL (no strong signals) | 🔴 SELL (2+ exit signals) | 
+                    🔴 STRONG SELL (4+ exit signals)
+                </p>
+                <table style="font-size: 13px;">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Signal</th>
+                            <th>RSI</th>
+                            <th>MACD</th>
+                            <th>SMA50</th>
+                            <th>SMA200</th>
+                            <th>EMA20</th>
+                            <th>Entry Signals</th>
+                            <th>Exit Signals</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {"".join([f'''
+                        <tr>
+                            <td><strong>{row['Symbol']}</strong></td>
+                            <td>{row['Signal']}</td>
+                            <td>{row['RSI']}</td>
+                            <td>{row['MACD']}</td>
+                            <td>{row['SMA50']}</td>
+                            <td>{row['SMA200']}</td>
+                            <td>{row['EMA20']}</td>
+                            <td><span style="color: #28a745; font-size: 11px;">{row['Entry_Signals']}</span></td>
+                            <td><span style="color: #dc3545; font-size: 11px;">{row['Exit_Signals']}</span></td>
+                        </tr>
+                        ''' for _, row in self.trading_signals_df.iterrows()])}
+                    </tbody>
+                </table>
+                
+                <h2 style="margin: 30px 0 20px 0;">�🏆 TOP 20 BSE Stocks (by Sharpe Ratio)</h2>
                 <table>
                     <thead>
                         <tr>
@@ -513,13 +714,19 @@ class BSEStockAnalyzer:
                 </table>
                 
                 <h2 style="margin: 30px 0 20px 0;">📊 Risk vs Return Profile</h2>
-                <div class="chart-container" id="scatter-chart"></div>
+                <div class="chart-container">
+                    {scatter_html}
+                </div>
                 
                 <h2 style="margin: 30px 0 20px 0;">🔥 Performance Heatmap (Top 20)</h2>
-                <div class="chart-container" id="heatmap-chart"></div>
+                <div class="chart-container">
+                    {heatmap_html}
+                </div>
                 
                 <h2 style="margin: 30px 0 20px 0;">📈 Candlestick Charts (Top 10 Stocks)</h2>
-                <div class="chart-container" id="candlestick-chart"></div>
+                <div class="chart-container">
+                    {candlestick_html}
+                </div>
             </div>
             
             <footer>
@@ -528,13 +735,6 @@ class BSEStockAnalyzer:
             </footer>
             
             <script>
-                // Chart data
-                const scatterData = {analysis_df.to_json(orient='records')};
-                const heatmapData = {heatmap_data.head(20).to_json()};
-                
-                // Render charts (Plotly)
-                // Note: Charts would be rendered here with Plotly.newPlot()
-                
                 function toggleDarkMode() {{
                     document.body.classList.toggle('dark-mode');
                     localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));

@@ -1,0 +1,51 @@
+Symbol,Signal,RSI,MACD,SMA50,SMA200,EMA20,Entry_Signals,Exit_Signals
+TCS,🔴 SELL,63.2,-0.07,₹135,₹152,₹130,Price Above EMA20,"RSI Above 60, Death Cross (SMA50 < SMA200)"
+RELIANCE,🟡 NEUTRAL,49.1,-0.22,₹46,₹37,₹45,Price Above EMA20,Price Below SMA50
+INFY,🔴 SELL,43.0,-0.01,₹5,₹5,₹5,None,"Price Below SMA50, Price Below EMA20"
+HDFC,🟢 STRONG BUY,60.1,0.01,₹0,₹0,₹0,"MACD Bullish Crossover, Golden Cross (SMA50 > SMA200), Price Above EMA20",RSI Above 60
+HINDUNILVR,🟢 STRONG BUY,59.2,1.39,₹33,₹32,₹36,"MACD Bullish Crossover, Golden Cross (SMA50 > SMA200), Price Above EMA20",None
+ITC,🟢 BUY,43.1,3.25,₹558,₹558,₹575,Golden Cross (SMA50 > SMA200),Price Below EMA20
+BAJAJFINSV,🔴 SELL,42.4,-0.02,₹6,₹7,₹6,None,"Death Cross (SMA50 < SMA200), Price Below EMA20"
+MARUTI,🟢 BUY,67.4,3.24,₹90,₹92,₹96,"Price Above SMA50, Price Above EMA20","RSI Above 60, Death Cross (SMA50 < SMA200)"
+SUNPHARMA,🟢 BUY,25.1,-0.15,₹10,₹14,₹10,RSI Oversold (<30),"Death Cross (SMA50 < SMA200), Price Below EMA20"
+ASIANPAINT,🔴 SELL,40.7,-2.82,₹90,₹102,₹84,Price Above EMA20,Death Cross (SMA50 < SMA200)
+DMART,🟢 BUY,48.3,9.62,₹2091,₹1876,₹2151,Golden Cross (SMA50 > SMA200),Price Below EMA20
+HCLTECH,🟡 NEUTRAL,50.5,-0.73,₹285,₹278,₹279,Price Above EMA20,Price Below SMA50
+ULTRACEMCO,🟡 NEUTRAL,43.3,-0.80,₹57,₹55,₹54,Price Above EMA20,Price Below SMA50
+WIPRO,🔴 STRONG SELL,30.1,-8.76,₹327,₹401,₹310,RSI Below 40,"MACD Bearish Crossover, Death Cross (SMA50 < SMA200), Price Below EMA20"
+AIRTEL,🟢 BUY,76.1,1.93,₹43,₹42,₹46,"Golden Cross (SMA50 > SMA200), Price Above EMA20",RSI Overbought (>70)
+SBILIFE,🟢 BUY,52.4,3.22,₹187,₹132,₹190,"Golden Cross (SMA50 > SMA200), Price Above EMA20",None
+BAJAJ-AUTO,🟢 BUY,78.1,9.78,₹211,₹179,₹229,"Golden Cross (SMA50 > SMA200), Price Above EMA20",RSI Overbought (>70)
+KOTAKBANK,🔴 SELL,36.9,-0.01,₹0,₹0,₹0,RSI Below 40,"Price Below SMA50, Price Below EMA20"
+ICICIBANK,🟢 BUY,46.7,0.08,₹17,₹18,₹17,"Price Above SMA50, Price Above EMA20",Death Cross (SMA50 < SMA200)
+SBIN,🟢 BUY,65.8,2.61,₹408,₹446,₹409,"Price Above SMA50, Price Above EMA20","RSI Above 60, Death Cross (SMA50 < SMA200)"
+BPCL,🟢 BUY,64.7,13.89,₹1674,₹1773,₹1714,"Price Above SMA50, Price Above EMA20","RSI Above 60, Death Cross (SMA50 < SMA200)"
+GAIL,🟢 BUY,42.2,57.42,₹3372,₹3216,₹3562,Golden Cross (SMA50 > SMA200),Price Below EMA20
+POWERGRID,🟢 BUY,21.4,-2.57,₹165,₹194,₹163,RSI Oversold (<30),"Death Cross (SMA50 < SMA200), Price Below EMA20"
+INDIGO,🔴 STRONG SELL,44.4,-0.03,₹4,₹5,₹4,None,"MACD Bearish Crossover, Death Cross (SMA50 < SMA200), Price Below EMA20"
+PHARMAHOLD,🟢 BUY,67.7,2.66,₹71,₹88,₹75,"Price Above SMA50, Price Above EMA20","RSI Above 60, Death Cross (SMA50 < SMA200)"
+ONGC,🟢 BUY,21.9,-3.54,₹81,₹74,₹75,RSI Oversold (<30),"Price Below SMA50, Price Below EMA20"
+JSWSTEEL,🔴 SELL,50.8,-0.17,₹14,₹15,₹14,None,"Death Cross (SMA50 < SMA200), Price Below EMA20"
+TATASTEEL,🔴 STRONG SELL,32.1,-13.39,₹1428,₹1631,₹1390,RSI Below 40,"MACD Bearish Crossover, Death Cross (SMA50 < SMA200), Price Below EMA20"
+ADANIPORTS,🟢 BUY,16.5,-8.43,₹265,₹294,₹252,RSI Oversold (<30),"Death Cross (SMA50 < SMA200), Price Below EMA20"
+NTPC,🟢 BUY,59.1,6.35,₹253,₹286,₹269,"Price Above SMA50, Price Above EMA20",Death Cross (SMA50 < SMA200)
+HINDALCO,🟢 BUY,56.4,6.71,₹285,₹249,₹300,"Golden Cross (SMA50 > SMA200), Price Above EMA20",MACD Bearish Crossover
+LUPIN,🟢 BUY,83.8,0.21,₹12,₹12,₹12,"Price Above SMA50, Price Above EMA20","RSI Overbought (>70), Death Cross (SMA50 < SMA200)"
+CIPLA,🟢 BUY,26.8,-0.02,₹1,₹1,₹1,RSI Oversold (<30),"Price Below SMA50, Price Below EMA20"
+TATACOFFEE,🟢 BUY,64.7,2.49,₹160,₹137,₹159,"Golden Cross (SMA50 > SMA200), Price Above EMA20",RSI Above 60
+BRITANIA,🟢 STRONG BUY,28.4,0.32,₹144,₹130,₹150,"RSI Oversold (<30), Golden Cross (SMA50 > SMA200)",Price Below EMA20
+NESTLEIND,🟢 STRONG BUY,57.4,12.62,₹849,₹761,₹880,"MACD Bullish Crossover, Golden Cross (SMA50 > SMA200), Price Above EMA20",None
+EMAMILTD,🔴 SELL,32.7,-7088.07,₹269978,₹223460,₹257429,RSI Below 40,"Price Below SMA50, Price Below EMA20"
+GODREJCP,🟢 STRONG BUY,50.9,0.15,₹40,₹40,₹41,"MACD Bullish Crossover, Price Above SMA50, Price Above EMA20",Death Cross (SMA50 < SMA200)
+MARICO,🟢 BUY,76.7,4.97,₹172,₹170,₹176,"Golden Cross (SMA50 > SMA200), Price Above EMA20",RSI Overbought (>70)
+HAVELLS,🔴 SELL,56.0,-0.05,₹3,₹3,₹3,None,"Price Below SMA50, Price Below EMA20"
+PIDILITIND,🔴 SELL,42.7,1.11,₹1749,₹1852,₹1756,None,"Death Cross (SMA50 < SMA200), Price Below EMA20"
+TORNTPHARM,🟢 BUY,36.8,-0.26,₹415,₹460,₹418,"RSI Below 40, Price Above SMA50, Price Above EMA20",Death Cross (SMA50 < SMA200)
+HDFCBANK,🟢 BUY,68.4,0.01,₹0,₹0,₹0,"Price Above SMA50, Price Above EMA20","RSI Above 60, Death Cross (SMA50 < SMA200)"
+SBICARD,🟢 BUY,25.0,-0.87,₹25,₹26,₹23,RSI Oversold (<30),"Death Cross (SMA50 < SMA200), Price Below EMA20"
+BOSCHLTD,🟢 BUY,55.5,4.67,₹1440,₹1388,₹1445,"Golden Cross (SMA50 > SMA200), Price Above EMA20",None
+APOLLOTYRE,🟢 BUY,61.0,3.57,₹353,₹367,₹354,"Price Above SMA50, Price Above EMA20","RSI Above 60, Death Cross (SMA50 < SMA200)"
+BANKBARODA,🔴 SELL,57.5,0.15,₹73,₹77,₹73,Price Above EMA20,Death Cross (SMA50 < SMA200)
+CENTRALBANK,🟢 BUY,63.9,0.32,₹33,₹34,₹33,"Price Above SMA50, Price Above EMA20","RSI Above 60, Death Cross (SMA50 < SMA200)"
+PTC,🟢 STRONG BUY,59.3,0.27,₹34,₹37,₹35,"MACD Bullish Crossover, Price Above SMA50, Price Above EMA20",Death Cross (SMA50 < SMA200)
+RECLTD,🟢 BUY,59.6,0.07,₹7,₹8,₹7,"Price Above SMA50, Price Above EMA20",Death Cross (SMA50 < SMA200)
