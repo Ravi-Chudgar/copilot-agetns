@@ -29,7 +29,7 @@ class RealtimeTradingDashboard:
         
         # Generate mock data for demonstration
         # In production, replace with actual dhanHQ API call
-        dates = pd.date_range(end=datetime.now(), periods=days*24, freq='1H')
+        dates = pd.date_range(end=datetime.now(), periods=days*24, freq='h')
         
         np.random.seed(42)
         base_price = 605
@@ -158,7 +158,7 @@ class RealtimeTradingDashboard:
     
     def identify_candlestick_pattern(self, i: int) -> str:
         """Identify candlestick patterns"""
-        if i < 2:
+        if i < 2 or i >= len(self.df):
             return "N/A"
         
         o = self.df['open'].iloc[i]
@@ -720,7 +720,7 @@ class RealtimeTradingDashboard:
         signals_df = self.generate_signals()
         html = self.generate_html_dashboard(signals_df)
         
-        with open(output_file, 'w') as f:
+        with open(output_file, 'w', encoding='utf-8') as f:
             f.write(html)
         
         print(f"✅ Dashboard saved: {output_file}")
