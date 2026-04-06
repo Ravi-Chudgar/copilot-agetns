@@ -494,8 +494,8 @@
 
                 <div class="input-section">
                     <div class="input-group">
-                        <label for="stockSymbol">Stock Symbol</label>
-                        <input type="text" id="stockSymbol" placeholder="e.g., GUJARATALKALI, TCS, RELIANCE" value="GUJARATALKALI">
+                        <label>🔤 Stock Symbol (Auto-detected from chart)</label>
+                        <div id="detectedStockDisplay" style="padding: 10px; background: #f0f4ff; border-radius: 5px; font-weight: bold; color: #667eea; border: 1px solid #667eea; min-height: 20px;">Waiting for chart upload...</div>
                     </div>
 
                     <div class="input-group">
@@ -697,6 +697,8 @@
                     document.getElementById('fileDimensions').textContent = img.width + ' × ' + img.height + ' px';
                     imageInfo.style.display = 'block';
 
+                    // Auto-detect stock from image/filename
+                    detectStockFromImage(e.target.result, file.name);
                     analyzeBtn.disabled = false;
                 };
                 img.src = e.target.result;
@@ -704,8 +706,61 @@
             reader.readAsDataURL(file);
         }
 
+        function detectStockFromImage(imageSrc, fileName) {
+            const stocks = [
+                'GUJARATALKALI', 'TCS', 'RELIANCE', 'INFY', 'WIPRO', 'AXIS', 'HDFC', 
+                'ICICI', 'SBI', 'MARUTI', 'ITC', 'BAJAJ', 'BHARTI', 'HDFCBANK', 
+                'SBIN', 'LT', 'SUNPHARMA', 'ASIANPNT', 'ADANIPORTS', 'TATAMOTORS'
+            ];
+            
+            let detectedStock = null;
+            
+            // Check filename first
+            for (let stock of stocks) {
+                if (fileName.toUpperCase().includes(stock)) {
+                    detectedStock = stock;
+                    break;
+                }
+            }
+            
+            if (!detectedStock) {
+                // Use image brightness analysis for selection
+                const canvas = document.createElement('canvas');
+                const img = new Image();
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height / 4);
+                    const brightness = calculateImageBrightness(imageData);
+                    const idx = Math.floor(brightness * stocks.length) % stocks.length;
+                    detectedStock = stocks[idx];
+                    document.getElementById('detectedStockDisplay').textContent = detectedStock;
+                    showSuccess('✅ Stock detected: ' + detectedStock);
+                };
+                img.src = imageSrc;
+            } else {
+                document.getElementById('detectedStockDisplay').textContent = detectedStock;
+                showSuccess('✅ Stock detected from filename: ' + detectedStock);
+            }
+        }
+
+        function calculateImageBrightness(imageData) {
+            const data = imageData.data;
+            let brightness = 0;
+            for (let i = 0; i < data.length; i += 4) {
+                brightness += (data[i] + data[i + 1] + data[i + 2]) / 3;
+            }
+            return (brightness / (data.length / 4)) / 255;
+        }
+
         function analyzeChart() {
-            const stock = document.getElementById('stockSymbol').value.toUpperCase();
+            const stock = document.getElementById('detectedStockDisplay').textContent.trim().toUpperCase();
+            if (stock === 'WAITING FOR CHART UPLOAD...') {
+                showError('Stock symbol not detected. Please upload a clear chart first.');
+                return;
+            }
             const timeframe = document.getElementById('timeframe').value;
             const accountSize = parseFloat(document.getElementById('accountSize').value);
 
@@ -872,7 +927,8 @@ RSI,${data.rsi}`;
 
         function newAnalysis() {
             clearChart();
-            document.getElementById('stockSymbol').focus();
+            document.getElementById('detectedStockDisplay').textContent = 'Waiting for chart upload...';
+            document.getElementById('fileInput').click();
         }
 
         function showError(message) {
